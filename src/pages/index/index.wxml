@@ -1,0 +1,24 @@
+<!--index.wxml-->
+<view>
+  <view class='top'>
+    <text class='top-text'>点击心形可以选单张图片</text>
+
+    <button class='set' bindtap='setBtn'>设置</button>
+  </view>
+  <canvas class='container' bindtouchend="oneImg" canvas-id="myCanvas"></canvas>
+
+  <view class='fl'>
+    <button bindtap='saveImg' class='save' disabled="{{btnDis}}">保存图片</button>
+    <button bindtap='moreImg' class='choose-more'>选择多张图片</button>
+  </view>
+
+  <progress class='progress' style="display:{{progressVis}};" percent="{{percent}}" activeColor="#FD4966" active active-mode="forwards" show-info stroke-width="12" />
+
+  <view class='fl bottom'>
+    <button class='clearBtn fs40 recommend' open-type='share'>推荐给朋友</button>
+    <button class='clearBtn fs40 feedback' open-type='feedback'>意见反馈</button>
+  </view>
+
+
+  <canvas class='container2' canvas-id="myCanvas2"></canvas>
+</view>

@@ -1,0 +1,114 @@
+/**index.wxss**/
+
+page {
+  background: #93E0FE;
+}
+
+.top {
+  display: flex;
+  height: 80rpx;
+  align-items: center;
+  justify-content: space-around;
+  margin: 20rpx auto;
+  width: 315px;
+}
+
+.top-text {
+  color: #fff;
+  line-height: 80rpx;
+  font-size: 36rpx;
+}
+
+/* 设置按钮 */
+
+.set {
+  margin-right: 0;
+  color: #fff;
+  background: #FD4966;
+  border-radius: 80rpx;
+  line-height: 80rpx;
+  font-size: 36rpx;
+}
+
+.fl {
+  display: flex;
+  height: 80rpx;
+  align-items: center;
+  justify-content: space-between;
+  margin: 60rpx auto;
+  width: 315px;
+}
+
+/* 保存按钮 */
+
+.save {
+  margin: 0;
+  border-radius: 100rpx;
+  background: #FD4966;
+  color: #fff;
+}
+
+/* 选择多张图片按钮 */
+
+.choose-more {
+  margin: 0;
+  background: #FFC069;
+  color: #fff;
+}
+.set::after,.save::after,.choose-more::after{
+  border: 0;
+}
+
+/* 清除默认按钮样式 */
+
+.clearBtn {
+  height: 60rpx;
+  line-height: 60rpx;
+  background: transparent;
+  border: none;
+  outline: none;
+  margin: 0;
+  padding: 0;
+}
+
+.clearBtn::after {
+  border: none;
+}
+
+.fs40 {
+  font-size: 40rpx;
+}
+
+/* 推荐 和 意见反馈按钮 */
+
+.recommend, .feedback {
+  border-bottom: 1rpx solid #fff;
+  color: #fff;
+  border-radius: 0;
+}
+
+.progress {
+  margin: 20rpx;
+}
+
+.container {
+  width: 315px;
+  height: 315px;
+  margin: 20rpx auto;
+  background: #fff;
+}
+
+.bottom {
+  width: 315px;
+}
+
+.container2 {
+  width: 945px;
+  height: 945px;
+  margin: 0 auto;
+  position: fixed;
+  left: 100%;
+  bottom: -100%;
+  background: #fff;
+  z-index: -1;
+}
