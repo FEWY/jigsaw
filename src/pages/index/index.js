@@ -235,11 +235,11 @@ Page({
     save(2, 2);
 
     function save(x, y) {
-      if (y < 0) {
-        --x;
-        y = 2;
-      }
       if (x < 0) {
+        --y;
+        x = 2;
+      }
+      if (y < 0) {
         console.log("小于0 停止函数");
         return;
       }
@@ -259,7 +259,7 @@ Page({
             filePath: res.tempFilePath,
             success(res) {
               // 保存下一张
-              save(x, --y);
+              save(--x, y);
               // 增加进度条的值
               that.progressAdd();
             },
