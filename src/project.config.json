@@ -13,7 +13,7 @@
 	"compileType": "miniprogram",
 	"libVersion": "2.2.0",
 	"appid": "wx1ad0d514638a92dc",
-	"projectname": "%E6%8B%BC%E5%9B%BE",
+	"projectname": "git%E6%8B%BC%E5%9B%BE",
 	"isGameTourist": false,
 	"condition": {
 		"search": {

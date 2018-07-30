@@ -4,17 +4,7 @@ const app = getApp()
 Page({
   data: {
     // 表示九宫格心形的数组
-    heart: [
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 1, 1, 0, 1, 1, 0, 0],
-      [0, 1, 1, 1, 1, 1, 1, 1, 0],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [0, 1, 1, 1, 1, 1, 1, 1, 0],
-      [0, 0, 1, 1, 1, 1, 1, 0, 0],
-      [0, 0, 0, 1, 1, 1, 0, 0, 0],
-      [0, 0, 0, 0, 1, 0, 0, 0, 0],
-    ],
+    heart: [],
     // 大的canvas 是 小的canvas 的 multiple 倍
     multiple: 3,
     // 一个格子的宽度，也就是 小的canvas的宽度/9
@@ -70,6 +60,7 @@ Page({
     that.reset();
 
     // 画出所有网格
+    // ctx.setStrokeStyle('#93E0FE')
     // for (var i = 0; i < 10; i++) {
     //   ctx.moveTo(i * grid, 0);
     //   ctx.lineTo(i * grid, maxWidth);
@@ -87,6 +78,8 @@ Page({
     //   ctx2.lineTo(315 * multiple, i * grid * multiple);
     //   ctx2.stroke();
     // }
+    // ctx.draw(true);
+    // ctx2.draw(true);
   },
 
   // 点击心形，选择一张图片 
@@ -240,10 +233,9 @@ Page({
         x = 2;
       }
       if (y < 0) {
-        console.log("小于0 停止函数");
         return;
       }
-      console.log("x和y", x, y);
+
       wx.canvasToTempFilePath({
         x: x * width,
         y: y * width,
