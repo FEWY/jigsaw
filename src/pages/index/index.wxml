@@ -2,7 +2,6 @@
 <view>
   <view class='top'>
     <text class='top-text'>点击心形可以选单张图片</text>
-
     <button class='set' bindtap='setBtn'>设置</button>
   </view>
   <canvas class='container' bindtouchend="oneImg" canvas-id="myCanvas"></canvas>
@@ -18,7 +17,6 @@
     <button class='clearBtn fs40 recommend' open-type='share'>推荐给朋友</button>
     <button class='clearBtn fs40 feedback' open-type='feedback'>意见反馈</button>
   </view>
-
 
   <canvas class='container2' canvas-id="myCanvas2"></canvas>
 </view>
