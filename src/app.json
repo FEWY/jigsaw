@@ -1,11 +1,39 @@
 {
-  "pages":[
-    "pages/index/index"
+  "pages": [
+    "pages/index/index",
+    "pages/set/set",
+    "pages/about/about"
   ],
-  "window":{
-    "backgroundTextStyle":"light",
-    "navigationBarBackgroundColor": "#93E0FE",
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#89f7fe",
     "navigationBarTitleText": "WeChat",
-    "navigationBarTextStyle":"black"
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#93E0FE",
+    "selectedColor": "#fff",
+    "backgroundColor":"#66a6ff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "iconPath": "./images/jigsaw.png",
+        "selectedIconPath": "./images/jigsaw2.png",
+        "pagePath": "pages/index/index",
+        "text": "拼图"
+      },
+      {
+        "iconPath": "./images/setting2.png",
+        "selectedIconPath": "./images/setting3.png",
+        "pagePath": "pages/set/set",
+        "text": "自定义"
+      },
+      {
+        "iconPath": "./images/team.png",
+        "selectedIconPath": "./images/team2.png",
+        "pagePath": "pages/about/about",
+        "text": "关于"
+      }
+    ]
   }
 }

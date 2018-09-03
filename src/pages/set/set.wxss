@@ -1,0 +1,24 @@
+/**set.wxss**/
+@import "../../lib/weui.wxss";
+
+.section {
+  margin-bottom: 30rpx;
+}
+
+.weui-cells__title {
+  color: #999;
+}
+
+.weui-cells {
+  background-color: transparent;
+  color: #fff;
+  margin-bottom: 40rpx;
+}
+
+.weui-cells::before {
+  border: 0;
+}
+
+.weui-cells::after {
+  border: 0;
+}

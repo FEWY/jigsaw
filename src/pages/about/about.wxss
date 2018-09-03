@@ -1,0 +1,62 @@
+/**about.wxss**/
+.logo{
+  margin: 30rpx auto;
+  display: block;
+  width: 200rpx;
+  height: 200rpx;
+}
+.txt{
+  margin: 0 auto; 
+  width: 315px;
+}
+.txt text{
+  display: block;
+  width: 100%;
+  color: #fff;
+}
+.txt text.gray{ 
+  color: rgb(238, 237, 237);
+}
+.mb20{
+  margin-bottom: 30rpx;
+}
+.fl {
+  display: flex;
+  height: 80rpx;
+  align-items: center;
+  justify-content: space-between;
+  margin: 40rpx auto;
+  width: 315px;
+}
+
+/* 清除默认按钮样式 */
+
+.clearBtn {
+  height: 60rpx;
+  line-height: 60rpx;
+  background: transparent;
+  border: none;
+  outline: none;
+  margin: 0;
+  padding: 0;
+}
+
+.clearBtn::after {
+  border: none;
+}
+
+.fs40 {
+  font-size: 40rpx;
+}
+
+/* 推荐 和 意见反馈按钮 */
+
+.recommend, .feedback {
+  border-bottom: 1rpx solid #fff;
+  color: #fff;
+  border-radius: 0;
+}
+
+.bottom {
+  width: 315px;
+}

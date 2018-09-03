@@ -1,5 +1,19 @@
 <!--index.wxml-->
-<view>
+
+<import src="../../we-cropper/we-cropper.wxml" />
+
+<view class='wrapper' hidden='{{wrapperHidden}}'>
+  <view class="cropper-wrapper">
+    <template is="we-cropper" data="{{...cropperOpt}}" />
+  </view>
+  <view class='fl fixedBootom'>
+    <button bindtap="getCropperImage" class='save'>确定</button>
+    <button bindtap="uploadTap" class='choose-more'>选择图片</button>
+  </view>
+</view>
+
+
+<view class='content' hidden='{{canvasHidden}}'>
   <view class='top'>
     <text class='top-text'>点击心形可以选单张图片</text>
     <button class='set' bindtap='setBtn'>设置</button>
@@ -11,12 +25,9 @@
     <button bindtap='moreImg' class='choose-more'>选择多张图片</button>
   </view>
 
+
+
   <progress class='progress' style="display:{{progressVis}};" percent="{{percent}}" activeColor="#FD4966" active active-mode="forwards" show-info stroke-width="12" />
-
-  <view class='fl bottom'>
-    <button class='clearBtn fs40 recommend' open-type='share'>推荐给朋友</button>
-    <button class='clearBtn fs40 feedback' open-type='feedback'>意见反馈</button>
-  </view>
-
+  <ad unit-id="adunit-c1c820e5b22f04fb"></ad>
   <canvas class='container2' canvas-id="myCanvas2"></canvas>
 </view>

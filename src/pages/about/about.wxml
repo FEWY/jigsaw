@@ -1,0 +1,13 @@
+<!--about.wxml-->
+
+<image class='logo' src='../../images/logo.jpg'></image>
+<view class='txt'>
+  <text class='gray'>感谢大家反馈的意见，这次更新对于保存图片张数，补充图片类型，图片的裁剪，都做了一些更加人性化的改变，希望大家对于新版本，继续反馈合理意见，我一定认真听取大家的意见，继续优化这个小程序。</text>
+</view>
+
+<view class='fl bottom'>
+  <button class='clearBtn fs40 recommend' open-type='share'>推荐给朋友</button>
+  <button class='clearBtn fs40 feedback' open-type='feedback'>意见反馈</button>
+</view>
+
+<ad unit-id="adunit-a152a231783fe54f"></ad>

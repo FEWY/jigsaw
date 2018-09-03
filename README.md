@@ -192,6 +192,6 @@ button::after{
 如果你喜欢这个小程序的话，可以 star 支持一下。
 
 
-目前，这个小程序有进行一些优化，具体可以点这里。
+目前，这个小程序有进行一些优化，具体可以点[这里](https://github.com/FEWY/jigsaw/blob/master/document/102.md)。
 
 如果需要最开始的版本，请到[这里](https://github.com/FEWY/jigsaw/tree/3767780059b20c81caa573da5b7730521090cc7b)

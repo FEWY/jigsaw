@@ -1,7 +1,38 @@
 /**index.wxss**/
+page{
+  height: 100%;
+}
+.content {
+  position: relative;
+  width: 100%;
+  min-height: 100%;
+  background-image: linear-gradient(180deg, #89f7fe 0%, #66a6ff 100%);
+  z-index: 100;
+  padding: 40rpx 0 0;
+  box-sizing: border-box;
+}
 
-page {
-  background: #93E0FE;
+.wrapper {
+  height: 100%;
+  position: relative;
+}
+
+.cropper-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background-image: linear-gradient(180deg, #89f7fe 0%, #66a6ff 100%);
+}
+
+.fixedBootom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0rpx;
+  z-index: 100;
 }
 
 .top {
@@ -9,7 +40,7 @@ page {
   height: 80rpx;
   align-items: center;
   justify-content: space-around;
-  margin: 20rpx auto;
+  margin: 0 auto 30rpx;
   width: 315px;
 }
 
@@ -24,7 +55,7 @@ page {
 .set {
   margin-right: 0;
   color: #fff;
-  background: #FD4966;
+  background: #fd4966;
   border-radius: 80rpx;
   line-height: 80rpx;
   font-size: 36rpx;
@@ -44,7 +75,7 @@ page {
 .save {
   margin: 0;
   border-radius: 100rpx;
-  background: #FD4966;
+  background: #fd4966;
   color: #fff;
 }
 
@@ -52,40 +83,14 @@ page {
 
 .choose-more {
   margin: 0;
-  background: #FFC069;
+  background: #ffc069;
   color: #fff;
 }
-.set::after,.save::after,.choose-more::after{
+
+.set::after, .save::after, .choose-more::after {
   border: 0;
 }
 
-/* 清除默认按钮样式 */
-
-.clearBtn {
-  height: 60rpx;
-  line-height: 60rpx;
-  background: transparent;
-  border: none;
-  outline: none;
-  margin: 0;
-  padding: 0;
-}
-
-.clearBtn::after {
-  border: none;
-}
-
-.fs40 {
-  font-size: 40rpx;
-}
-
-/* 推荐 和 意见反馈按钮 */
-
-.recommend, .feedback {
-  border-bottom: 1rpx solid #fff;
-  color: #fff;
-  border-radius: 0;
-}
 
 .progress {
   margin: 20rpx;
@@ -98,9 +103,6 @@ page {
   background: #fff;
 }
 
-.bottom {
-  width: 315px;
-}
 
 .container2 {
   width: 945px;
@@ -111,4 +113,8 @@ page {
   bottom: -100%;
   background: #fff;
   z-index: -1;
+}
+
+ad{
+  margin: 0 auto;
 }
