@@ -5,7 +5,6 @@
 
 ![](https://raw.githubusercontent.com/FEWY/jigsaw/master/images/readme0.jpg)  
 
-代码有更新，扫码后的效果有点差别，目前正在修改readme中，修改完会上传新代码和readme....
 
 微信小程序需要的代码，在 src 文件夹中。
 
@@ -191,3 +190,8 @@ button::after{
 这个小程序不管在代码，还是功能上都还有许多地方可以继续优化，如果有需要的朋友可以直接拿去改。
 
 如果你喜欢这个小程序的话，可以 star 支持一下。
+
+
+目前，这个小程序有进行一些优化，具体可以点这里。
+
+如果需要最开始的版本，请到[这里](https://github.com/FEWY/jigsaw/tree/3767780059b20c81caa573da5b7730521090cc7b)
