@@ -1,31 +1,32 @@
 //index.js
-//获取应用实例
-const app = getApp()
-import WeCropper from '../../we-cropper/we-cropper.js'
-const device = wx.getSystemInfoSync()
+const WeCropper = require('../../we-cropper/we-cropper.js');
+const shape = require('../../utils/shape.js');
+const device = wx.getSystemInfoSync();
+const ctx = wx.createCanvasContext('myCanvas');
+const ctx2 = wx.createCanvasContext('myCanvas2');
+// 大的canvas 是 小的canvas 的 multiple 倍
+const multiple = 3;
+// 一个格子的宽度，也就是 小的canvas的宽度/9
+const grid = 35;
+// 小canvas的宽度
+const maxWidth = 315;
+// 初始时拼图形状的颜色
+const heartColor = '#FF9CC2';
+// 在小canvas上画的线的颜色
+const lineColor = '#93E0FE';
 Page({
   data: {
-    // 表示九宫格心形的数组
+    // 拼图形状的数组
     heart: [],
-    // 大的canvas 是 小的canvas 的 multiple 倍
-    multiple: 3,
-    // 一个格子的宽度，也就是 小的canvas的宽度/9
-    grid: 35,
-    // 小canvas的宽度
-    maxWidth: 315,
     // 判断 保存图片 按钮，是否禁用
     btnDis: false,
     // 是否显示进度条
-    progressVis: "none",
+    progressVis: true,
     // 进度条的进度 
     percent: 0,
-    // 在小canvas上画的线的颜色
-    lineColor: '#93E0FE',
-    // 初始时心形的颜色
-    heartColor: '#FF9CC2',
-    // 保存用户选择的图片路径
+    // 保存用户选择的图片的路径
     chooseImgUrl: {},
-    // 用来补充心形的图片
+    // 补充拼图形状的图片
     imgArr0: [
       '../../images/1.jpg',
       '../../images/2.jpg',
@@ -60,55 +61,45 @@ Page({
       scale: 2.5,
       zoom: 8,
     },
-    // 用来判断裁剪的 canvas 是否显示
+    // 判断裁剪的 canvas 是否显示
     wrapperHidden: true,
-    // 保存裁剪后的图片，在心形中的位置
+    // 保存裁剪后的图片，在拼图形状中的位置
     tailorPosition: {
       x: "",
       y: ""
     },
-    // 用来判断心形 canvas 是否显示
-    canvasHidden: false
+    // 判断拼图形状 canvas 是否显示
+    canvasHidden: false,
+    // 用户选的是第几个拼图形状
+    shapeIndex: "",
+    // 默认所选的拼图形状是第一个
+    defaultShapeIndex: 0,
   },
 
-
-  onLoad: function(option) {
+  onLoad: function () {
     let that = this;
-    let ctx = wx.createCanvasContext('myCanvas');
-    let ctx2 = wx.createCanvasContext('myCanvas2');
-
-    let multiple = that.data.multiple;
-    let grid = that.data.grid;
-    let maxWidth = that.data.maxWidth;
+    let defaultShapeIndex = that.data.defaultShapeIndex;
+    that.setData({
+      heart: JSON.parse(JSON.stringify(shape.shapeData[defaultShapeIndex])),
+    })
 
     that.setData({
       imgArr2: [...that.data.imgArr0, ...that.data.imgArr1]
     })
-
-    // 给两个canvas先填充上颜色，避免最后保存时，产生黑色背景
-    ctx.setFillStyle('#ffffff')
-    ctx.fillRect(0, 0, maxWidth, maxWidth)
-    ctx.draw()
-
-    ctx2.setFillStyle('#ffffff')
-    ctx2.fillRect(0, 0, maxWidth * multiple, maxWidth * multiple)
-    ctx2.draw()
-
-    // 调用重置方法，画出心形
-    that.reset();
+    // 获取用户选择的拼图形状
+    that.getShapeIndex();
+    // 更新通知
+    that.notice();
 
     const {
       cropperOpt
     } = this.data
 
     new WeCropper(cropperOpt)
-      .on('ready', function(ctx) {
+      .on('ready', function (ctx) {
         console.log(`wecropper is ready for work!`)
       })
       .on('beforeImageLoad', (ctx) => {
-        console.log(`before picture loaded, i can do something`)
-        console.log(`current canvas context:`, ctx)
-
         wx.showToast({
           title: '加载中...',
           icon: 'loading',
@@ -116,26 +107,19 @@ Page({
         })
       })
       .on('imageLoad', (ctx) => {
-        console.log(`picture loaded`)
-        console.log(`current canvas context:`, ctx)
-        wx.hideToast()
+        wx.hideToast();
       })
-
-
-
   },
 
-  // 点击心形，选择一张图片 
-  oneImg: function(e) {
-    const ctx = wx.createCanvasContext('myCanvas')
-    const ctx2 = wx.createCanvasContext('myCanvas2')
+  onShow: function () {
+    // 获取用户选择的拼图形状
+    this.getShapeIndex();
+  },
 
+  // 点击拼图形状，选择一张图片 
+  oneImg: function (e) {
     let that = this;
-    let multiple = that.data.multiple;
-    let maxWidth = that.data.maxWidth;
-    let grid = that.data.grid;
     let heart = that.data.heart;
-
 
     // 获取点击时 x 轴的值
     let x = e.changedTouches[0].x;
@@ -144,11 +128,10 @@ Page({
 
     // 确定 x 轴是在第几个格子
     x = Math.floor(x / grid);
-
     // 确定 y 轴是在第几个格子
     y = Math.floor(y / grid);
 
-    // 判断是不是在心形范围内
+    // 判断是不是在拼图形状范围内
     if (!heart[y][x] > 0) {
       return;
     }
@@ -156,7 +139,7 @@ Page({
     // 判断是手动裁剪，还是自动裁剪
     wx.getStorage({
       key: 'tailorIndex',
-      success: function(res) {
+      success: function (res) {
         // 手动裁剪
         if (res.data == 1) {
           let tailorPosition = {
@@ -165,49 +148,44 @@ Page({
           }
           // 调用裁剪的选择图片方法
           that.uploadTap();
-          // 显示裁剪canvas，记录裁剪后图片在心形中的位置，隐藏心形 canvas
+          // 显示裁剪canvas，记录裁剪后图片在拼图形状中的位置，隐藏拼图形状 canvas
           that.setData({
             wrapperHidden: false,
             tailorPosition: tailorPosition,
             canvasHidden: true
           })
-
-          wx.hideTabBar();
         } else {
           // 自动裁剪
           autoTailor()
         }
       },
-      fail: function() {
+      fail: function () {
         // 如果获取失败，就选择自动裁剪
-        autoTailor()
+        autoTailor();
       }
     })
 
+    // 自动裁剪
     function autoTailor() {
       // 选择图片
       wx.chooseImage({
-        // 点击心形时，只能选一张图片
+        // 点击拼图形状时，只能选一张图片
         count: 1,
-        success: function(res) {
-          console.log('res', res);
+        success: function (res) {
           let fileUrl = res.tempFilePaths[0];
           // 获取图片信息
           wx.getImageInfo({
-            src: res.tempFilePaths[0],
-            success: function(res) {
-              console.log('图片信息', res);
+            src: fileUrl,
+            success: function (res) {
               // 调用 drawImg 方法，画出选择的图片
               that.drawImg(fileUrl, res, x, y);
-
               // 把选择的图片路径保存在 chooseImgUrl 中
               let chooseImgUrl = that.data.chooseImgUrl;
               chooseImgUrl['' + x + y] = fileUrl;
-
               that.setData({
-                chooseImgUrl: chooseImgUrl
+                chooseImgUrl,
               })
-              // 点击心形区域，画的图片等级是3
+              // 点击拼图形状区域，画的图片等级是3
               heart[y][x] = 3;
             }
           })
@@ -215,22 +193,15 @@ Page({
       })
     }
 
-
-
   },
   // 选择多张图片
-  moreImg: function() {
+  moreImg: function () {
     let that = this;
-    let ctx = wx.createCanvasContext('myCanvas');
-    let ctx2 = wx.createCanvasContext('myCanvas2');
-    let multiple = that.data.multiple;
-    let grid = that.data.grid;
     let heart = that.data.heart;
 
     // 选择图片
     wx.chooseImage({
-      success: function(res) {
-        console.log('res', res);
+      success: function (res) {
         // imgNum 表示选择的图片数量
         let imgNum = res.tempFilePaths.length;
         // 画一张图片，num 就+1
@@ -241,25 +212,20 @@ Page({
             if (num >= imgNum) {
               return;
             }
-
             if (heart[i][j] == 1) {
               let fileUrl = res.tempFilePaths[num++];
               // 获取图片信息
               wx.getImageInfo({
                 src: fileUrl,
-                success: function(res) {
-                  console.log('图片信息', res);
+                success: function (res) {
                   // 调用 drawImg 方法，画出选择的图片
                   that.drawImg(fileUrl, res, j, i);
-
                   // 把选择的图片路径保存在 chooseImgUrl 中
                   let chooseImgUrl = that.data.chooseImgUrl;
                   chooseImgUrl['' + j + i] = fileUrl;
-
                   that.setData({
-                    chooseImgUrl: chooseImgUrl
+                    chooseImgUrl,
                   })
-
                   // 点击 选择多张图片 按钮，画的图片的等级是2
                   heart[i][j] = 2;
                 }
@@ -275,15 +241,7 @@ Page({
   // res 是图片信息
   // x 表示 x轴第几个格子
   // y 表示 y轴第几个格子
-  drawImg: function(fileUrl, res, x, y) {
-    let that = this;
-    let ctx = wx.createCanvasContext('myCanvas');
-    let ctx2 = wx.createCanvasContext('myCanvas2');
-
-    let multiple = that.data.multiple;
-    let grid = that.data.grid;
-    let heart = that.data.heart;
-
+  drawImg: function (fileUrl, res, x, y) {
     let width = res.width;
     let height = res.height;
 
@@ -299,19 +257,15 @@ Page({
     }
 
     ctx.drawImage(fileUrl, sx, sy, sWidth, sWidth, x * grid, y * grid, grid, grid);
-    ctx.draw(true)
+    ctx.draw(true);
 
     ctx2.drawImage(fileUrl, sx, sy, sWidth, sWidth, x * grid * multiple, y * grid * multiple, grid * multiple, grid * multiple);
-    ctx2.draw(true)
+    ctx2.draw(true);
   },
 
-  // 保存九张图片
-  saveImg: function() {
+  // 保存图片
+  saveImg: function () {
     let that = this;
-    let multiple = that.data.multiple;
-    let grid = that.data.grid;
-    let maxWidth = that.data.maxWidth;
-    let width = grid * 3 * multiple;
 
     // 查看是否有保存到相册权限
     wx.getSetting({
@@ -323,15 +277,16 @@ Page({
           wx.authorize({
             scope: 'scope.writePhotosAlbum',
             success() {
-              console.log('获取授权成功')
-              saveImg()
+              saveImg();
             },
             fail() {
-              console.log('获取授权失败')
-              wx.showToast({
-                title: '请先打开保存权限',
-                icon: 'none',
-                duration: 2000
+              wx.showModal({
+                content: '保存图片功能需要授权相册权限，请授权',
+                success(res) {
+                  if (res.confirm) {
+                    wx.openSetting()
+                  }
+                }
               })
             }
           })
@@ -343,31 +298,52 @@ Page({
       // 判断是保存一张还是保存九张
       wx.getStorage({
         key: 'saveNum',
-        success: function(res) {
-          console.log(res);
+        success: function (res) {
           if (res.data == 1) {
             // 保存为一张
             saveOne();
           } else if (res.data == 9) {
             // 保存为九张
-            saveNine(2, 2);
+            saveNine();
           }
         },
-        fail: function(res) {
-          console.log('fail', res);
-          saveNine(2, 2);
+        fail: function (res) {
+          saveNine();
         },
       })
     }
-
-
-
+    // 保存为一张图片
+    function saveOne() {
+      wx.canvasToTempFilePath({
+        x: 0,
+        y: 0,
+        width: maxWidth * multiple,
+        height: maxWidth * multiple,
+        canvasId: 'myCanvas2',
+        fileType: 'jpg',
+        success: function (res) {
+          // 保存图片到相册
+          wx.saveImageToPhotosAlbum({
+            filePath: res.tempFilePath,
+            success(res) {
+              wx.showToast({
+                title: '保存成功',
+                icon: 'success',
+                duration: 2000
+              })
+            },
+          })
+        }
+      })
+    }
     // 保存为九张图片
-    function saveNine(x, y) {
-      // 显示进度条，并禁用 保存 按钮
+    function saveNine() {
+      let x = 2;
+      let y = 2;
+      // 显示进度条，并禁用 保存图片 按钮
       that.setData({
         btnDis: true,
-        progressVis: "block",
+        progressVis: false,
       })
       save(x, y);
 
@@ -380,15 +356,14 @@ Page({
           return;
         }
         wx.canvasToTempFilePath({
-          x: x * width,
-          y: y * width,
-          width: grid * 3 * multiple,
-          height: grid * 3 * multiple,
+          x: x * maxWidth,
+          y: y * maxWidth,
+          width: maxWidth,
+          height: maxWidth,
           canvasId: 'myCanvas2',
           quality: 1,
           fileType: 'jpg',
-          success: function(res) {
-            console.log(res.tempFilePath)
+          success: function (res) {
             // 保存图片到相册
             wx.saveImageToPhotosAlbum({
               filePath: res.tempFilePath,
@@ -398,139 +373,112 @@ Page({
                 // 增加进度条的值
                 that.progressAdd();
               },
-              fail(res) {
-                console.log(res.errMsg)
-              }
             })
           }
         })
       }
-
     }
-
-
-    // 保存为一张图片
-    function saveOne() {
-      wx.canvasToTempFilePath({
-        x: 0,
-        y: 0,
-        width: maxWidth * multiple,
-        height: maxWidth * multiple,
-        canvasId: 'myCanvas2',
-        fileType: 'jpg',
-        success: function(res) {
-          console.log(res.tempFilePath)
-          // 保存图片到相册
-          wx.saveImageToPhotosAlbum({
-            filePath: res.tempFilePath,
-            success(res) {
-              wx.showToast({
-                title: '保存成功',
-                icon: 'success',
-                duration: 2000
-              })
-            },
-            fail(res) {
-              console.log(res.errMsg)
-            }
-          })
-        }
-      })
-    }
-
 
   },
   // 进度条
-  progressAdd: function() {
+  progressAdd: function () {
     let that = this;
     // 保存一张图片，进度条增加12
     that.setData({
       percent: that.data.percent + 12
     })
 
-    // 进度条超过100，就把进度条的值改为0，并且隐藏了，并把 保存心形 按钮设置为可用
+    // 进度条超过100，就把进度条的值改为0，并且隐藏了，并把 保存图片 按钮设置为可用
     if (that.data.percent > 100) {
       that.setData({
         percent: 0,
         btnDis: false,
-        progressVis: "none",
+        progressVis: true,
       })
     }
   },
   // 分享
-  onShareAppMessage: function(res) {
+  onShareAppMessage: function (res) {
     return {
       title: '朋友圈，微博，抖音 都在玩的小程序！！！',
       path: '/pages/index/index',
       imageUrl: '../../images/sharImg.jpg'
     }
   },
-  setBtn: function() {
+  // 更新通知
+  notice: function () {
+    wx.getStorage({
+      key: 'notice',
+      fail: function () {
+        wx.showModal({
+          confirmColor: "#66a6ff",
+          cancelColor: "#cccccc",
+          content: '你要试试 自定义拼图形状 吗？',
+          success(res) {
+            if (res.confirm) {
+              wx.setStorage({
+                key: 'notice',
+                data: true,
+              })
+              wx.switchTab({
+                url: "/pages/help/help",
+              })
+            }
+          }
+        })
+      },
+    })
+  },
+
+  // 点击补充按钮
+  replenishBtn: function () {
     let that = this;
     wx.showActionSheet({
       itemList: ['补充图片', '重置'],
-      success: function(res) {
-        console.log(res.tapIndex);
+      success: function (res) {
         // 补充图片
         if (res.tapIndex == 0) {
           that.replenishImg();
         }
-
         // 重置，清除所有已经画的图片
         if (res.tapIndex == 1) {
           that.reset();
         }
-
       },
-      fail: function(res) {
-        console.log(res.errMsg)
-      }
     })
   },
 
   // 补充图片
-  replenishImg: function() {
+  replenishImg: function () {
     let that = this;
-    let ctx = wx.createCanvasContext('myCanvas');
-    let ctx2 = wx.createCanvasContext('myCanvas2');
-    let multiple = that.data.multiple;
-    let grid = that.data.grid;
-    let maxWidth = that.data.maxWidth;
     let heart = that.data.heart;
 
     // 获取补充图片类型
     wx.getStorage({
       key: 'imgType',
-      success: function(res) {
-        // console.log(res);
+      success: function (res) {
         let imgType = res.data;
         selType(imgType)
       },
-      fail: function() {
-        console.log('getStorage fail');
+      fail: function () {
         selType(0);
       }
     })
 
     // 判断补充图片类型
     function selType(imgType) {
-      // 补充已经选择的图片
+      // 补充已选图片
       if (imgType == 3) {
-        addSelImg()
+        addSelImg();
       } else {
-        wx.showLoading({
-          title: '加载中',
-        })
-
-        // 获取图片路径数组
+        // 获取补充图片路径的数组
         let tmp_images = that.data['imgArr' + imgType];
-        draw(tmp_images)
-
-        wx.hideLoading();
+        // 补充除已选图片外的其他类型
+        draw(tmp_images);
       }
     }
 
-    // 补充已经选择的图片
+    // 补充已选图片
     function addSelImg() {
       let chooseImgUrl = that.data.chooseImgUrl;
       let tmp_images = [];
@@ -543,14 +491,13 @@ Page({
         })
         return;
       }
-
-      for (let k in chooseImgUrl) {
-        tmp_images.push(chooseImgUrl[k])
-      }
-
       wx.showLoading({
         title: '加载中',
       })
+
+      for (let k in chooseImgUrl) {
+        tmp_images.push(chooseImgUrl[k]);
+      }
 
       let len = tmp_images.length - 1;
       for (let i = 0; i < heart.length; i++) {
@@ -561,26 +508,25 @@ Page({
             // 获取图片信息
             wx.getImageInfo({
               src: fileUrl,
-              success: function(res) {
-                console.log('图片信息', res);
+              success: function (res) {
                 // 调用 drawImg 方法，用临时路径画出图片
                 that.drawImg(fileUrl, res, j, i);
               }
             })
           }
         }
-        // 心形补充完后，隐藏加载状态
-        if (i == heart.length - 1) {
-          wx.hideLoading();
-        }
       }
+      wx.hideLoading();
     }
 
+    // 补充除已选图片外的其他类型
     function draw(tmp_images) {
       if (tmp_images.length == 0) {
         return;
       }
-
+      wx.showLoading({
+        title: '加载中',
+      })
       let len = tmp_images.length - 1;
       for (let i = 0; i < heart.length; i++) {
         for (let j = 0; j < heart[i].length; j++) {
@@ -589,17 +535,17 @@ Page({
             let url = tmp_images[randomNum(0, len)];
             // 在canvas上画出补充的图片
             ctx.drawImage(url, j * grid, i * grid, grid, grid);
-            ctx.draw(true)
+            ctx.draw(true);
 
-            ctx2.drawImage(url, j * grid * multiple, i * grid * multiple, grid * multiple, grid * multiple)
-            ctx2.draw(true)
+            ctx2.drawImage(url, j * grid * multiple, i * grid * multiple, grid * multiple, grid * multiple);
+            ctx2.draw(true);
           }
         }
       }
-      //画出九宫格
+      // 画九宫格的线
       that.drawLine();
+      wx.hideLoading();
     }
-
     // 获取 from 到 to 的随机数
     function randomNum(from, to) {
       let Range = to - from;
@@ -608,67 +554,102 @@ Page({
     }
   },
 
-
-  // 重置
-  reset: function() {
+  // 获取用户选择的拼图形状
+  getShapeIndex: function () {
     let that = this;
-    let ctx = wx.createCanvasContext('myCanvas');
-    let ctx2 = wx.createCanvasContext('myCanvas2');
-    let multiple = that.data.multiple;
-    let grid = that.data.grid;
-    let maxWidth = that.data.maxWidth;
-    let heartColor = that.data.heartColor;
+    wx.getStorage({
+      key: 'shapeIndex',
+      success: function (res) {
+        let shapeIndex = that.data.shapeIndex;
+        if (shapeIndex !== res.data) {
+          that.setData({
+            shapeIndex: res.data
+          })
+          that.getShapeData(res.data);
+        }
+      },
+      fail: function () {
+        // 设置默认拼图形状
+        that.setDefaultShapeData();
+      },
+    })
+  },
+  // 获取存储的拼图形状数据
+  getShapeData: function (shapeIndex) {
+    let that = this;
+    wx.getStorage({
+      key: 'shapeData',
+      success: function (res) {
+        let shapeData = res.data;
+        if (shapeData[shapeIndex]) {
+          let data = JSON.parse(JSON.stringify(shapeData[shapeIndex]));
+          that.setData({
+            heart: data
+          })
+        }
+        // 调用重置方法，重置拼图形状
+        that.reset();
+      },
+    })
+  },
+  // 设置默认拼图形状
+  setDefaultShapeData: function () {
+    let defaultShapeIndex = this.data.defaultShapeIndex;
+    let data = JSON.parse(JSON.stringify(shape.shapeData[defaultShapeIndex]));
+    this.setData({
+      heart: data,
+    })
+    wx.setStorage({
+      key: 'shapeIndex',
+      data: defaultShapeIndex,
+    })
+    wx.setStorage({
+      key: 'shapeData',
+      data: shape.shapeData,
+    })
+    // 调用重置方法，重置拼图形状
+    this.reset();
+  },
+  // 重置
+  reset: function () {
+    let heart = this.data.heart;
 
-    let heart = [
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 1, 1, 0, 1, 1, 0, 0],
-      [0, 1, 1, 1, 1, 1, 1, 1, 0],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [0, 1, 1, 1, 1, 1, 1, 1, 0],
-      [0, 0, 1, 1, 1, 1, 1, 0, 0],
-      [0, 0, 0, 1, 1, 1, 0, 0, 0],
-      [0, 0, 0, 0, 1, 0, 0, 0, 0],
-    ];
-    that.setData({
-      heart: heart,
+    // 给两个canvas先填充上颜色，避免最后保存时，产生黑色背景
+    ctx.setFillStyle('#ffffff');
+    ctx.fillRect(0, 0, maxWidth, maxWidth);
+    ctx.draw();
+
+    ctx2.setFillStyle('#ffffff');
+    ctx2.fillRect(0, 0, maxWidth * multiple, maxWidth * multiple);
+    ctx2.draw();
+
+    this.setData({
       chooseImgUrl: {},
     })
-
-    // 重置，画出心形
+    // 重置，画出拼图形状
     for (let i = 0; i < heart.length; i++) {
       for (let j = 0; j < heart[i].length; j++) {
-        if (heart[i][j] == 1) {
+        if (heart[i][j] != 0) {
           ctx.rect(j * grid, i * grid, grid, grid);
-          ctx.setFillStyle(heartColor)
+          ctx.setFillStyle(heartColor);
           ctx.fill();
 
           ctx2.rect(j * grid * multiple, i * grid * multiple, grid * multiple, grid * multiple);
-          ctx2.setFillStyle(heartColor)
-          ctx2.fill()
+          ctx2.setFillStyle(heartColor);
+          ctx2.fill();
+
+          heart[i][j] = 1;
         }
       }
     }
-    ctx2.draw(true);
     ctx.draw(true);
-
-    //画出九宫格
-    that.drawLine();
+    ctx2.draw(true);
+    // 画九宫格的线
+    this.drawLine();
   },
   // 画九宫格的线
-  drawLine: function() {
-    let that = this;
-    let ctx = wx.createCanvasContext('myCanvas');
-    let ctx2 = wx.createCanvasContext('myCanvas2');
-
-    let multiple = that.data.multiple;
-    let grid = that.data.grid;
-    let maxWidth = that.data.maxWidth;
-    let lineColor = that.data.lineColor;
-
-    // 画出九宫格
+  drawLine: function () {
     ctx.setStrokeStyle(lineColor);
-    ctx2.setStrokeStyle(lineColor);
     for (let i = 1; i < 3; i++) {
       ctx.moveTo(i * grid * 3, 0);
       ctx.lineTo(i * grid * 3, maxWidth);
@@ -679,7 +660,6 @@ Page({
       ctx.stroke();
     }
     ctx.draw(true);
-    ctx2.draw(true);
   },
   // 裁剪功能
   touchStart(e) {
@@ -694,62 +674,48 @@ Page({
   getCropperImage() {
     let that = this;
     this.wecropper.getCropperImage((src) => {
-      wx.showTabBar()
+      wx.showTabBar();
       if (src) {
         that.setData({
           wrapperHidden: true,
           canvasHidden: false
         });
-        console.log('裁剪路径', src);
-        // 画出裁剪的图片
+        // 在拼图形状上画出裁剪的图片
         that.drawTailorImg(src);
-      } else {
-        console.log('获取图片地址失败，请稍后重试')
-
       }
     })
   },
   uploadTap() {
-    const that = this
-    that.wecropper.updateCanvas()
+    let that = this;
+    wx.hideTabBar();
+    that.wecropper.updateCanvas();
     wx.chooseImage({
       count: 1, // 默认9
       sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
       sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
       success(res) {
-        console.log('res.tempFilePaths[0]', res)
-        const src = res.tempFilePaths[0]
-        that.wecropper.pushOrign(src)
+        let src = res.tempFilePaths[0];
+        that.wecropper.pushOrign(src);
       },
       fail() {
-        console.log('没有选择图片')
         that.setData({
           wrapperHidden: true,
           canvasHidden: false
         });
-        wx.showTabBar()
+        wx.showTabBar();
       }
     })
   },
 
-  // 画出裁剪的图片
-  drawTailorImg: function(url) {
-    let that = this;
-    let ctx = wx.createCanvasContext('myCanvas');
-    let ctx2 = wx.createCanvasContext('myCanvas2');
-    let multiple = that.data.multiple;
-    let grid = that.data.grid;
-    let maxWidth = that.data.maxWidth;
-    let heart = that.data.heart;
-
-    let x = that.data.tailorPosition.x;
-    let y = that.data.tailorPosition.y;
-
-    let chooseImgUrl = that.data.chooseImgUrl;
+  // 在拼图形状上画出裁剪的图片
+  drawTailorImg: function (url) {
+    let heart = this.data.heart;
+    let x = this.data.tailorPosition.x;
+    let y = this.data.tailorPosition.y;
+    let chooseImgUrl = this.data.chooseImgUrl;
     chooseImgUrl['' + x + y] = url;
-
-    that.setData({
-      chooseImgUrl: chooseImgUrl
+    this.setData({
+      chooseImgUrl,
     })
 
     ctx.drawImage(url, x * grid, y * grid, grid, grid);

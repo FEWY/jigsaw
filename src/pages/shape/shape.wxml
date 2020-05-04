@@ -1,0 +1,14 @@
+<!--pages/shape/shape.wxml-->
+<view class='content'>
+  <view class='top'>
+    <input class='top-text' bindblur="getShapeName" placeholder="请输入自定义形状的名称" placeholder-class="phcolor" />
+  </view>
+  <canvas class='container' bindtouchend="selectGrid" canvas-id="myCanvas"></canvas>
+
+  <view class='fl'>
+    <button bindtap='save' class='save'>保存形状</button>
+    <button bindtap='clear' class='clear'>清除已选</button>
+  </view>
+
+  <ad unit-id="adunit-22055c9933c3d248" ad-type="grid" grid-opacity="0.8" grid-count="5" ad-theme="white"></ad>
+</view>

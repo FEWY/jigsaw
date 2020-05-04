@@ -8,13 +8,30 @@
 		"es6": true,
 		"postcss": true,
 		"minified": true,
-		"newFeature": true
+		"newFeature": true,
+		"coverView": true,
+		"autoAudits": false,
+		"showShadowRootInWxmlPanel": true,
+		"scopeDataCheck": false,
+		"checkInvalidKey": true,
+		"checkSiteMap": true,
+		"uploadWithSourceMap": true,
+		"babelSetting": {
+			"ignore": [],
+			"disablePlugins": [],
+			"outputPath": ""
+		},
+		"useCompilerModule": true,
+		"userConfirmedUseCompilerModuleSwitch": false
 	},
 	"compileType": "miniprogram",
-	"libVersion": "1.9.2",
+	"libVersion": "2.11.0",
 	"appid": "wx1ad0d514638a92dc",
-	"projectname": "jigsaw3",
+	"projectname": "src",
 	"isGameTourist": false,
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
+	"cloudfunctionTemplateRoot": "cloudfunctionTemplate",
 	"condition": {
 		"search": {
 			"current": -1,
@@ -32,6 +49,10 @@
 			"currentL": -1,
 			"list": []
 		},
+		"gamePlugin": {
+			"current": -1,
+			"list": []
+		},
 		"miniprogram": {
 			"current": 1,
 			"list": [
@@ -44,7 +65,21 @@
 				{
 					"id": -1,
 					"name": "tailor",
-					"pathName": "pages/tailor/tailor"
+					"pathName": "pages/tailor/tailor",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "pages/shape/shape",
+					"pathName": "pages/shape/shape",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/help/help",
+					"pathName": "pages/help/help",
+					"scene": null
 				}
 			]
 		}

@@ -22,3 +22,8 @@
 .weui-cells::after {
   border: 0;
 }
+.delete{ 
+  width: 50rpx;
+  height: 50rpx;
+  margin: 10rpx 20rpx 0 0;
+}

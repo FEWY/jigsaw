@@ -2,7 +2,8 @@
   "pages": [
     "pages/index/index",
     "pages/set/set",
-    "pages/about/about"
+    "pages/help/help",
+    "pages/shape/shape"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -13,7 +14,7 @@
   "tabBar": {
     "color": "#93E0FE",
     "selectedColor": "#fff",
-    "backgroundColor":"#66a6ff",
+    "backgroundColor": "#66a6ff",
     "borderStyle": "white",
     "list": [
       {
@@ -23,17 +24,18 @@
         "text": "拼图"
       },
       {
-        "iconPath": "./images/setting2.png",
-        "selectedIconPath": "./images/setting3.png",
+        "iconPath": "./images/setting.png",
+        "selectedIconPath": "./images/setting1.png",
         "pagePath": "pages/set/set",
-        "text": "自定义"
+        "text": "设置"
       },
       {
-        "iconPath": "./images/team.png",
-        "selectedIconPath": "./images/team2.png",
-        "pagePath": "pages/about/about",
-        "text": "关于"
+        "iconPath": "./images/question.png",
+        "selectedIconPath": "./images/question2.png",
+        "pagePath": "pages/help/help",
+        "text": "帮助"
       }
     ]
-  }
+  },
+  "sitemapLocation": "sitemap.json"
 }

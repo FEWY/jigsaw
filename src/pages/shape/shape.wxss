@@ -1,4 +1,4 @@
-/**index.wxss**/
+/* pages/shape/shape.wxss */
 
 page {
   height: 100%;
@@ -14,34 +14,9 @@ page {
   box-sizing: border-box;
 }
 
-.wrapper {
-  height: 100%;
-  position: relative;
-}
-
-.cropper-wrapper {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  background-image: linear-gradient(180deg, #89f7fe 0%, #66a6ff 100%);
-}
-
-.fixedBootom {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0rpx;
-  z-index: 100;
-}
-
 .top {
-  display: flex;
   height: 80rpx;
   align-items: center;
-  justify-content: space-around;
   margin: 0 auto 30rpx;
   width: 315px;
 }
@@ -52,16 +27,19 @@ page {
   font-size: 36rpx;
 }
 
-/* 补充按钮 */
+.phcolor {
+  color: #fff;
+}
 
-.replenish {
+/* 设置按钮 */
+
+.set {
   margin-right: 0;
   color: #fff;
   background: #fd4966;
   border-radius: 80rpx;
   line-height: 80rpx;
   font-size: 36rpx;
-  padding: 0 34rpx;
 }
 
 .fl {
@@ -77,25 +55,22 @@ page {
 
 .save {
   margin: 0;
-  border-radius: 100rpx;
-  background: #fd4966;
+  border-radius: 10rpx;
+  background: #f5576c;
   color: #fff;
 }
 
-/* 选择多张图片按钮 */
+/* 清除按钮 */
 
-.choose-more {
+.clear {
   margin: 0;
-  background: #ffc069;
+  border-radius: 10rpx;
+  background: #009efd;
   color: #fff;
 }
 
-.replenish::after, .save::after, .choose-more::after {
+.set::after, .save::after, .clear::after {
   border: 0;
-}
-
-.progress {
-  margin: 20rpx;
 }
 
 .container {
@@ -103,17 +78,6 @@ page {
   height: 315px;
   margin: 20rpx auto;
   background: #fff;
-}
-
-.container2 {
-  width: 945px;
-  height: 945px;
-  margin: 0 auto;
-  position: fixed;
-  left: 100%;
-  bottom: -100%;
-  background: #fff;
-  z-index: -1;
 }
 
 ad {

@@ -1,0 +1,42 @@
+<!-- help.wxml-->
+<view class='item'>
+  <view class='title' bindtap="toggle" data-str="Q1">
+    <text>Q1、如何自定义拼图形状？</text>
+    <image class='arrows' src='{{Q1src}}'></image>
+  </view>
+  <view class='content {{Q1Class}} c1'>
+    <text>1、点击设置</text>
+    <image class='arrows' src="../../images/help1.jpg"></image>
+    <text>2、拼图形状，选择自定义</text>
+    <image class='arrows' src="../../images/help2.jpg"></image>
+    <text>3、输入自定义形状的名称，点击区域内的小格子，（粉色格子表示之后这里是可以选择图片的，白色格子表示之后这里是不可以选择图片的）</text>
+    <image class='arrows' src="../../images/help3.jpg"></image>
+    <text>4、设置好形状后，点击保存形状</text>
+    <image class='arrows' src="../../images/help4.jpg"></image>
+    <text>5、完成之后就可以使用新的形状了</text>
+    <image class='arrows' src="../../images/help5.jpg"></image>
+  </view>
+</view>
+
+<view class='item'>
+  <view class='title' bindtap="toggle" data-str="Q2">
+    <text>Q2、自定义形状的数据丢失了？</text>
+    <image class='arrows' src='{{Q2src}}'></image>
+  </view>
+  <text class='content {{Q2Class}}'>因为自定义形状的数据是只保存在手机存储空间中的，如果删除小程序或因存储空间不足，都会导致自定义形状的数据丢失，如果丢失就只能重新设置自定义形状了。</text>
+</view>
+
+<view class='item'>
+  <view class='title' bindtap="toggle" data-str="Q3">
+    <text>Q3、为什么需要保存图片到系统相册权限？</text>
+    <image class='arrows' src='{{Q3src}}'></image>
+  </view>
+  <text class='content {{Q3Class}}'>因为最后生成的图片如果需要保存，只能保存到系统相册，所以需要获取保存图片到系统相册权限，如果不允许这个权限，小程序无法保存生成的图片。</text>
+</view>
+
+<view class='fl bottom'>
+  <button class='clearBtn fs40 recommend' open-type='share'>推荐给朋友</button>
+  <button class='clearBtn fs40 feedback' open-type='feedback'>意见反馈</button>
+</view>
+
+<ad unit-id="adunit-bcb3730bb9fba0a5" ad-type="grid" grid-opacity="0.8" grid-count="5" ad-theme="white"></ad>

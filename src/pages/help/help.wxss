@@ -1,0 +1,98 @@
+/**help.wxss**/
+
+.item {
+  font-size: 34rpx;
+  overflow: hidden;
+}
+
+.item .title {
+  color: #999;
+  padding: 10rpx 20rpx;
+  background: #fff;
+  margin: 0 10rpx 10px 10rpx;
+  border-radius: 10rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item .arrows {
+  width: 40rpx;
+  height: 40rpx;
+}
+
+.item .content {
+  color: #fff;
+  display: block;
+  padding: 0rpx 20rpx 40rpx;
+  transition: padding-bottom 0.4s;
+}
+
+.item .content.c1 {
+  background-image: linear-gradient(180deg, #89f7fe 0%, #66a6ff 100%);
+}
+
+.item .content.c1 text {
+  display: inline-block;
+  margin-bottom: 10rpx;
+}
+
+.item .content image {
+  display: block;
+  width: 375rpx;
+  height: 640rpx;
+  margin: 0 auto 24rpx;
+}
+
+.item .content.show {
+  padding: 0rpx 20rpx 40rpx;
+  height: auto;
+  visibility: visible;
+}
+
+.item .content.hidden {
+  padding: 0;
+  height: 0;
+  visibility: hidden;
+}
+
+.fl {
+  display: flex;
+  height: 80rpx;
+  align-items: center;
+  justify-content: space-between;
+  margin: 40rpx auto;
+  width: 315px;
+}
+
+/* 清除默认按钮样式 */
+
+.clearBtn {
+  height: 60rpx;
+  line-height: 60rpx;
+  background: transparent;
+  border: none;
+  outline: none;
+  margin: 0;
+  padding: 0;
+}
+
+.clearBtn::after {
+  border: none;
+}
+
+.fs40 {
+  font-size: 40rpx;
+}
+
+/* 推荐 和 意见反馈按钮 */
+
+.recommend, .feedback {
+  border-bottom: 1rpx solid #fff;
+  color: #fff;
+  border-radius: 0;
+}
+
+.bottom {
+  width: 315px;
+}

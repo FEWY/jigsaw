@@ -1,6 +1,5 @@
 <!--set.wxml-->
 <view class="section">
-
   <view class="weui-cells__title">保存图片张数</view>
   <view class="weui-cells weui-cells_after-title">
     <view class="weui-cell weui-cell_input">
@@ -29,7 +28,7 @@
     </view>
   </view>
 
- 
+
   <view class="weui-cells__title">单选图片裁剪模式</view>
   <view class="weui-cells weui-cells_after-title">
     <view class="weui-cell weui-cell_input">
@@ -45,4 +44,21 @@
   </view>
 
 
+  <view class="weui-cells__title">拼图形状</view>
+  <view class="weui-cells weui-cells_after-title">
+    <view class="weui-cell weui-cell_input">
+      <view class="weui-cell__hd">
+        <view class="weui-label">当前选择</view>
+      </view>
+      <view class="weui-cell__bd">
+        <picker bindchange="shapeChange" value="{{shapeIndex}}" range="{{shapeName}}">
+          <view class="weui-input">{{shapeName[shapeIndex]}}</view>
+        </picker>
+      </view>
+      <view class="weui-cell__hd" hidden="{{isHiddenDeleteIcon}}">
+        <image class="delete" mode="aspectFit" bindtap="deleteShape" src="../../images/delete.png"></image>
+      </view>
+    </view>
+  </view>
+  <ad unit-id="adunit-371628933e7cae02" ad-type="grid" grid-opacity="0.8" grid-count="5" ad-theme="white"></ad>
 </view>

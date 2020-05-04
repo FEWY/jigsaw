@@ -12,11 +12,10 @@
   </view>
 </view>
 
-
 <view class='content' hidden='{{canvasHidden}}'>
   <view class='top'>
-    <text class='top-text'>点击心形可以选单张图片</text>
-    <button class='set' bindtap='setBtn'>设置</button>
+    <text class='top-text'>点击粉色格子选择单张图片</text>
+    <button class='replenish' bindtap='replenishBtn'>补充</button>
   </view>
   <canvas class='container' bindtouchend="oneImg" canvas-id="myCanvas"></canvas>
 
@@ -25,9 +24,7 @@
     <button bindtap='moreImg' class='choose-more'>选择多张图片</button>
   </view>
 
-
-
-  <progress class='progress' style="display:{{progressVis}};" percent="{{percent}}" activeColor="#FD4966" active active-mode="forwards" show-info stroke-width="12" />
-  <ad unit-id="adunit-c1c820e5b22f04fb"></ad>
+  <progress class='progress'  hidden="{{progressVis}}" percent="{{percent}}" activeColor="#FD4966" active active-mode="forwards" show-info stroke-width="12" />
+  <ad unit-id="adunit-e0b3ce9d03f8dc59" ad-type="grid" grid-opacity="0.8" grid-count="5" ad-theme="white"></ad>
   <canvas class='container2' canvas-id="myCanvas2"></canvas>
 </view>
